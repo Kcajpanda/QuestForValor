@@ -1,0 +1,22 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Godot 3 (harmless if unused)
+.import/
+
+# Mono
+.mono/
+
+# Exports
+export.cfg
+export_presets.cfg
+
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# OS files
+Thumbs.db
+.DS_Store
