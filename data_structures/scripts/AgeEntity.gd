@@ -9,6 +9,8 @@ var uses: int
 var total_uses: int
 ## Wether the entity can be aged.
 var ageable:bool
+##
+signal end_age
 
 ## Same Param as Entity but takes in a uses:int for .uses
 func _init(name:String, id, uses:int, descr:String="") -> void:
