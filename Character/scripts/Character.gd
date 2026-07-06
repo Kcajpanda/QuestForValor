@@ -29,6 +29,8 @@ var defn: SaveStat
 ##
 var res: SaveStat
 ##
+var pos: Vector2
+##
 var weap_rnks: Array
 
 ##

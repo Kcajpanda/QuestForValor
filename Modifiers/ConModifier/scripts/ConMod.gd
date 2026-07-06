@@ -11,8 +11,8 @@ var is_met: bool
 signal con_met
 
 ## A Modifier, is owned by a Stat (or a sublcass of it) to modifier and Stat, has a val to apply to the Stat and age which have age() to decrease it age over time.
-func _init(id:String = "def_con_mod", dur:int=0, val=null, con=null):
-	super(id, dur, val)
+func _init(name:String, id:int, target:Object, con=null):
+	super(name, id, target)
 	self.con = con
 	self.connect("con_met", _on_con_met())
 
@@ -20,12 +20,12 @@ func _init(id:String = "def_con_mod", dur:int=0, val=null, con=null):
 func _on_con_met():
 	self.is_met = true
 
-## Checks if condition is met, if so it returns self.val, used by Stat to apply the Modifier.
-func apply() -> int:
+## Checks if condition is met, if so it runs Modifier.apply(age), if not it returns false (not time for deletion).
+func apply(age:int=1) -> bool:
 	if is_met:
-		return val
+		return super(age)
 	else:
-		return 0
+		return false
 	
 func _str():
-	return id + ": [dur=" + str(dur) + ", val=" + str(val) + ", condition=" + str(con) + "]"
+	return id + ": [uses=" + str(uses) + ", val=" + str(val) + ", condition=" + str(con) + "]"

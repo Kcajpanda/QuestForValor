@@ -3,15 +3,18 @@ extends Entity
 
 class_name AgeEntity
 
-## Uses, or age, how many uses it has, whether it can expire depends on which child class of AgeEntity it extends
+## Uses, or age, how many uses it has
 var uses: int
+## Total uses, static val of whatever uses is instansiated as.
+var total_uses: int
 ## Wether the entity can be aged.
 var ageable:bool
 
 ## Same Param as Entity but takes in a uses:int for .uses
-func _init(name:String, id:int, uses:int, descr:String="") -> void:
+func _init(name:String, id, uses:int, descr:String="") -> void:
 	super(name, id, descr)
 	self.uses = uses
+	self.total_uses = uses
 	if self.uses == -1:
 		self.ageable = false
 	else:

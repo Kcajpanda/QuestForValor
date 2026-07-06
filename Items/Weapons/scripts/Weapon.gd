@@ -76,8 +76,17 @@ var wght: SaveStat
 ## Critical Chance, Used to determine the likelyhood of a critical hit.
 var crit: SaveStat
 
+# Other
+## Current Modifiers on a weapon and its stats
+var mods: ModList
+## Names of modifiers applied to the wielder, Effects obj.
+var effects: Effects
+## Char holdign the weapon
+var holder:Character
+
+
 ## Exntension of the Item class containign methods and properties relevant to weapons.
-func _init(weap_name:String, id:int, type:int, mght:int=0, acc:int=0, uses:int=0, wght:float=0.0, crit:int=0, range:int=1, atck_range:int=1, rq_rnk:int=0, descr:String = ""):
+func _init(weap_name:String, id:int, type:int, mght:int=0, acc:int=0, uses:int=0, wght:float=0.0, crit:int=0, range:int=1, atck_range:int=1, rq_rnk:int=0, effects:Effects=Effects.new([]), descr:String = ""):
 	super(weap_name, id, uses, descr)
 	
 	self.rq_rnk = rq_rnk
@@ -89,12 +98,48 @@ func _init(weap_name:String, id:int, type:int, mght:int=0, acc:int=0, uses:int=0
 	self.acc = SaveStat.new("acc", acc)
 	self.wght = SaveStat.new("wght", wght)
 	self.crit = SaveStat.new("crit", crit)
+	
+	mods = ModList.new()
+	self.effects = effects
+	holder =  null
+
+# Main
+
+## sets holder to param char. 
+func equip(char:Character) -> void:
+	holder = char
+	self.effects.effect(holder)
+	
+## Unequips the weapon 
+func unequip() -> void:
+	holder = null
+	
+
+## Returns wether its equipped or not.
+func is_equipped() -> bool:
+	return holder != null
+
+# Modifiers
+## Adds mod to weapon.mods
+func add_mod(mod:Modifier) -> void:
+	self.mods.add_mod(mod)
+
+## applies all active mods to weapon
+func apply_mod(index:int, age:int=1) -> void:
+	self.mods.apply_mod(index, age)
+
+## applies all active mods to weapon
+func apply(age:int=1) -> void:
+	self.mods.apply_mods(age)
+	
+	
+# Weapon Triangle
 
 ## Determines tri-bonus based on its own type and that of the oppossing weapon
 func tri_bonus(type:int) -> int:
 	return TRI_BONUS[self.type][type]
 
-##
+## Returns the tri-bonus for a given weapon base don its advantage and the rank of its wielder.
 func tri_advantages(advatage:bool, char_rnk:int) -> Array[int]:
 	if advatage:
 		return RANK_ADVANTAGES.get(char_rnk)[0]
