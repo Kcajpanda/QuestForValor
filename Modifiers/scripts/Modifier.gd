@@ -7,7 +7,7 @@ class_name Modifier
 enum MOD_FUNC { ADD, SUBTRACT, MULTIPLY, DIVIDE }
 
 ## Stores the creation param for a modifier of a given name key=modifier_name, to be replaced by Resource later
-const MODIFIERS = { # prop_name:StringName, mod_func:MOD_FUNC, val=null, times_applied:int, applied_every:int, duration:int, desc:=""
+const MODIFIERS = { # prop_name:StringName, mod_func:MOD_FUNC, val=null, first_apply:int, times_applied:int, applied_every:int, duration:int, desc:=""
 	"default": ["none", 1, 0],
 	"posion-I_2_4" : ["hp", MOD_FUNC.ADD, 2, 0, 1, 1, 4, "A weak Posion affect,"],
 	"posion-II_4_4" : ["hp", MOD_FUNC.SUBTRACT, 4, 0, 1, 1, 4, "A potent Poision affect,"],

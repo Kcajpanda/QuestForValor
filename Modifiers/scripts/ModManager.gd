@@ -26,6 +26,13 @@ func get_curr_mods_for(prop_name:StringName) -> Array[Modifier]:
 func run_turns_for(prop_name:StringName) -> void:
 	modlists.get(prop_name).run_turns() 
 	
+##
+func apply_mod(mod:Modifier, prop_val):
+	var temp = prop_val
+	var post = mod.ref_func.call(prop_val)
+	print(str(temp) + " => " + str(post))
+	return post
+	
 ## Runs each .ref_func() from the given curr_mods, sequntially changing total, simulating edits to the stat prop_val without changing it (base don current guidlines).
 func apply_for(prop_name:StringName, prop_val):
 	self.run_turns_for(prop_name)
@@ -33,5 +40,5 @@ func apply_for(prop_name:StringName, prop_val):
 	
 	var total = prop_val
 	for mod in curr_mods:
-		total = mod.ref_func.call(total)
+		total = self.apply_mod(mod, total)
 	return total
