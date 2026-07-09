@@ -14,6 +14,8 @@ var id: int:
 		return id
 ##
 var charclass: CharClass
+## The ModManager for a Char and its stats
+var mod_manager:ModManager
 ##
 var hp: SaveStat
 ##
@@ -49,6 +51,8 @@ func _init(char_name:String, id:int, charclass:CharClass, hp:int, strn:int, skl:
 	self.lck = SaveStat.new("lck", lck)
 	self.defn = SaveStat.new("defn", defn)
 	self.res = SaveStat.new("res", res)
+	
+	mod_manager = ModManager.new(["hp", self.strn.stat_name, "skl", "spd", "lck", "defn", "res"])
 	
 	self.weap_rnks = weap_rnks
 

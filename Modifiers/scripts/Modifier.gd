@@ -3,19 +3,24 @@ extends Entity
 
 class_name Modifier
 
-## Stores the creation param for a modifier of a given name key=modifier_name
-const MODIFIERS = { # prop_name:StringName, mod_func:String, val=null, times_applied:int, applied_every:int, duration:int, desc:=""
+## Represents the functions a Modifier can call.
+enum MOD_FUNC { ADD, SUBTRACT, MULTIPLY, DIVIDE }
+
+## Stores the creation param for a modifier of a given name key=modifier_name, to be replaced by Resource later
+const MODIFIERS = { # prop_name:StringName, mod_func:MOD_FUNC, val=null, times_applied:int, applied_every:int, duration:int, desc:=""
 	"default": ["none", 1, 0],
-	"posion-I_2_4" : ["hp", "-", 2, 0, 1, 1, 4, "A weak Posion affect,"],
-	"posion-II_4_4" : ["hp", "-", 4, 0, 1, 1, 4, "A potent Poision affect,"],
-	"posion-III_6_4" : ["hp", "-", 6, 0, 1, 2, 4, "A catastrophic Poision Affect,"],
-	"Str-boost-I" : ["strn", "+", 2, 0, 1, 4, 4, "A small Strength boost,"]
+	"posion-I_2_4" : ["hp", MOD_FUNC.ADD, 2, 0, 1, 1, 4, "A weak Posion affect,"],
+	"posion-II_4_4" : ["hp", MOD_FUNC.SUBTRACT, 4, 0, 1, 1, 4, "A potent Poision affect,"],
+	"posion-III_6_4" : ["hp", MOD_FUNC.SUBTRACT, 6, 0, 1, 2, 4, "A catastrophic Poision Affect,"],
+	"Str-boost-I" : ["strn", MOD_FUNC.ADD, 2, 0, 1, 4, 4, "A small Strength boost,"]
 }
 
 ## Name of property of target to be modified
 var prop_name:StringName
 ## Strign representing what obj.prop_name mod_func val, where mod_func is a mathmatical operand or (in the future) a more complex func  
-var mod_func:String
+var mod_func:MOD_FUNC
+## Callable to function represented by mod_func
+var ref_func:Callable
 ## Value associated with modifier, used by calling apply on the Modifier(or its subclass) instance to return that self.val, which si sued by the Stat (or its subclass) that uses it.
 var val
 ## First time of application, 0 = immedietly
@@ -29,12 +34,31 @@ var duration:int
 ## Signal indicating its tiem for the mod to be deleted
 signal end_mod
 
+# Mod_func Functions
+
+## Returns what would be the result of prop + val.
+func add(prop):
+	return prop + val
+	
+## Returns what would be the result of prop + val.
+func subtract(prop):
+	return prop - val
+
+## Returns what would be the result of prop * val.
+func multiply(prop):
+	return prop * val
+
+## Returns what would be the result of prop / val.
+func divide(prop):
+	return prop / val
+
 ## A Modifier, a subclass of AgeEntity, stores the name of the property it modifies, what operand or function it uses to modify it, what val it modifies by, and all the properties of its parent. Used by other obj and ModManager to alter the stats by a given amount.
 func _init(name:String, id:int):
 	var params:Array = MODIFIERS.get(name)
 	
 	prop_name = params[0]
 	mod_func = params[1]
+	self._interpret()
 	val = params[2]
 	first_apply = params[3]
 	times_applied = params[4]
@@ -43,9 +67,9 @@ func _init(name:String, id:int):
 	
 	super(name, id, self._descr_maker(params[7]))
 
-## Returns relevant info for immediet application
+## Returns relevant info for immediet application.
 func apply() -> Array:
-	return [prop_name, mod_func, val]
+	return [en_name, ref_func, val]
 
 # Private Methods
 
@@ -61,8 +85,20 @@ func _det_freq() -> String:
 
 ## Used by constructor to write the explanation part of the descr.
 func _descr_maker(descr:String="") -> String:
-	return descr + ", " + mod_func + str(val) + " to " + prop_name + self._det_freq()
+	return descr + ", " + str(mod_func) + str(val) + " to " + prop_name + self._det_freq()
+
+## Interprets mod_func and stores a callable of its func.
+func _interpret() -> void:
+	match mod_func:
+		MOD_FUNC.ADD:
+			ref_func = add
+		MOD_FUNC.SUBTRACT:
+			ref_func = subtract
+		MOD_FUNC.MULTIPLY:
+			ref_func = multiply
+		MOD_FUNC.DIVIDE:
+			ref_func = divide
 
 ## Returns "en_name: id| {id}, uses={self.uses}, prop_name: {prop_name}, mod_func: {mod_func}, val={self.val}, descr"
 func _str():
-	return super._str_helper() + "prop_name: " + str(prop_name) + "mod_func: " + mod_func + "val=" + str(val) + ", " + descr
+	return super._str_helper() + "prop_name: " + str(prop_name) + "mod_func: " + str(mod_func) + "val=" + str(val) + ", " + descr
