@@ -3,6 +3,8 @@ class_name Weapon
 
 extends AgeEntity
 
+##
+
 ## Takes in self.rq_rnk and returns the str_rq_rnk, used for generating str_rq_rnk
 const WEAPON_RANK = {
 	0: "E",
@@ -25,6 +27,7 @@ const WEAPON_TYPE = {
 	6: "Eldritch"
 }
 
+enum advantage {ADV, NUETRAL, DISADV}
 ## Matrix that takes in row=weap1, and col=weap2 => advantage for weap1
 const TRI_BONUS = [
 	[ 0, 1, -1, 0, 0, 0], #Sword
@@ -35,7 +38,7 @@ const TRI_BONUS = [
 	[ 0, 0, 0, 1, -1, 0] #Eldritch
 ]
 
-## Dictioanry sued to deermine bonus to acc and dmg for those at advatage and disadvantage in the weapon-tri, nuetral get no adv or dis regardless of weap rnk. 
+## Dictioanry used to determine bonus to acc and dmg for those at advatage and disadvantage in the weapon-tri, nuetral get no adv or dis regardless of weap rnk. 
 const RANK_ADVANTAGES = { ## [ [adv_acc, adv_dmg], [dis_acc, dis_dmg] ]
 	0: [ [5, 0], [-5, 0] ],
 	1: [ [5, 0], [-5, 0] ],
@@ -131,7 +134,6 @@ func apply_mod(index:int, age:int=1) -> void:
 ## applies all active mods to weapon
 func apply(age:int=1) -> void:
 	self.mods.apply_mods(age)
-	
 	
 # Weapon Triangle
 

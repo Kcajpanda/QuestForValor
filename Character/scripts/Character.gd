@@ -33,10 +33,10 @@ var res: SaveStat
 ##
 var pos: Vector2
 ##
-var weap_rnks: Array
+var weap_rnks:Dictionary[int, int]
 
 ##
-func _init(char_name:String, id:int, charclass:CharClass, hp:int, strn:int, skl:int, spd:int, lck:int, defn:int, res:int, weap_rnks:Array):
+func _init(char_name:String, id:int, charclass:CharClass, hp:int, strn:int, skl:int, spd:int, lck:int, defn:int, res:int, weap_rnks:Dictionary[int, int]):
 	self.char_name = char_name
 	self.id = id
 	self.charclass = charclass
@@ -63,9 +63,9 @@ func damage(val) -> void:
 	else:
 		self.hp.set_temp(0)
 
-##	
-func weap_rnk(weap_id:int) -> String:
-	return self.weap_rnks[weap_id]
+## Returns char weap_rnk:int with a weap of type weap.id from self.weap_rnks.
+func weap_rnk(weap_id:int) -> int:
+	return self.weap_rnks.get(id)
 	
 ##
 func get_weap_eff(weap_id:int) -> float:
