@@ -1,4 +1,11 @@
 ## Contains modlists, a Dictionary with key:prop_name, val:ModList for every prop_name in the input Array[StringName] prop_names
+
+#TODO modifer has two subcalsses, supplementalMod, directod, each contain an Effect what owns a functiona nd a val, modifiers dictate rules and depndign on sublcas how its applied, Modtracker and other higher classes may just need to be bale to tell the type of Mod subclasss, or have sublasses of their own
+
+"""
+One other thought based on our previous conversations: you mentioned that your modifiers aren't limited to simple + or - operations and can have arbitrary behavior. I think that's a great direction, and it fits nicely here. Rather than having each modifier return a value to be applied, I'd lean toward each modifier implementing behavior through well-defined hooks. For example, a stat modifier might implement something like modify_stat(current_value) or participate in a calculation pipeline, while an effect implements execute(target) or on_turn_start(target). That lets each modifier encapsulate its own logic without forcing the ModifierManager to understand every possible kind of operation. The manager's job becomes orchestrating when things happen; the character's job is owning state; and each modifier or effect defines how it changes the outcome. I think that separation will keep the system flexible as Quest for Valor grows.
+"""
+
 extends Resource
 
 class_name ModManager
