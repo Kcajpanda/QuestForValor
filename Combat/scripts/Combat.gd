@@ -151,21 +151,21 @@ func accuracy(char1:Character, weap1:Weapon, cha2:Character, weap2:Weapon, tile2
 	return ( acc_event.hitrate + acc_event.tri_bonuses ) - acc_event.avoid
 
 ## Allows for changes to be made to input to char1.strn.val, weap1.wght.val, tri_bonuses(), char2.get_weap_eff().
-signal calc_attack_power(event:CalcAttackPower)
+signal before_calc_attack_power(event:CalcAttackPower)
 ## Physical Attack = Strength + (Weapon Might + Weapon Triangle Bonus) * Weapon effectiveness + Support Bonus
 # include tile bonus for attacker?
 func attack_power(char1:Character, weap1:Weapon, char2:Character, weap2:Weapon) -> int:
 	var ap_event = CalcAttackPower.new(char1.strn.val, weap1.wght.val, tri_bonuses(char1, weap1, weap1.tri_bonus(weap2.id) )[1], char2.get_weap_eff(weap1.id))
-	calc_attack_power.emit(ap_event)
+	before_calc_attack_power.emit(ap_event)
 	
 	return ap_event.char1_strn + ( ap_event.weap1_wght + ap_event.tri_bonuses_dmg ) * ap_event.char2_weap_eff
 
 ## Allows for changes to be made to the value of tile.defn.val, which_stat, char.defn.val, and char.defn.val.
-signal calc_defense_power(event:CalcDefensePower)
+signal before_calc_defense_power(event:CalcDefensePower)
 ## Defense Power = Terrain Bonus + Defense + Support Bonus
 func defense_power(char:Character, tile:Tile, which_stat:bool) -> int:
 	var dp_event = CalcDefensePower.new(tile.defn.val, which_stat, char.defn.val, char.defn.val)
-	calc_defense_power.emit(dp_event)
+	before_calc_defense_power.emit(dp_event)
 	
 	var dp:int = dp_event.tile_defn
 	if dp_event.which_stat: #defn
@@ -175,30 +175,48 @@ func defense_power(char:Character, tile:Tile, which_stat:bool) -> int:
 	return dp
 
 ## Allows for changes to be made to the values of self.attack_power() and self.defense_power() in the damage calculation.
-signal calc_damage(event:CalcDamage)
+signal before_calc_damage(event:CalcDamage)
 ## Damage = Attack Power (attacker) - Defense Power (defender)
 func damage(char1:Character, weap1:Weapon, char2:Character, weap2:Weapon, tile2:Tile) -> int:
 	var d_event = CalcDamage.new(self.attack_power(char1, weap1, char2, weap2), self.defense_power(char2, tile2, char2.is_magic()))
-	calc_damage.emit(d_event)
+	before_calc_damage.emit(d_event)
 	
 	return d_event.attack_power - d_event.defense_power
 
 # Critical hits
 
-##
-signal calc_crit_damage(event)
+## Allows for changes to be made to the values of self.damage(char1, weap1, char2, weap2, tile2), and crit_dmg_mult = 3.
+signal before_calc_crit_damage(event:CalcCritDamage)
 ## Critical Damage = [Attack Power (attacker) - Defense Power (defender)] * 3
 func crit_damage(char1:Character, weap1:Weapon, char2:Character, weap2:Weapon, tile2:Tile) -> int:
-	return self.damage(char1, weap1, char2, weap2, tile2) * 3
+	var c_dmg_event = CalcCritDamage.new(self.damage(char1, weap1, char2, weap2, tile2), 3)
+	before_calc_crit_damage.emit(c_dmg_event)
+	
+	return c_dmg_event.dmg * c_dmg_event.crit_dmg_mult
 
+## Allows for changes to be made to the values of weap.crit.val, char.skl.val, and skl_divisor = 2
+signal before_calc_crit_rate(event:CalcCritRate)
 ## Critical Rate = Weapon Critical + Skill / 2 + Other Bonus
 func crit_rate(char:Character, weap:Weapon) -> float:
-	return weap.crit.val + char.skl.val / 2
+	var c_rate_event = CalcCritRate.new(weap.crit.val, char.skl.val, 2)
+	before_calc_crit_rate.emit(c_rate_event)
+	
+	return c_rate_event.weap_crit + c_rate_event.char_skl / c_rate_event.skl_divisor
 
+## Allows for changes to be made to the values of char.lck.val.
+signal before_calc_crit_avoid(event:CalcCritAvoid)
 ## Critical Avoid = Luck + Support Bonus
 func crit_avoid(char:Character) -> int:
-	return char.lck.val
+	var c_avoid_event = CalcCritAvoid.new(char.lck.val)
+	before_calc_crit_avoid.emit(c_avoid_event)
 	
+	return c_avoid_event.char_lck
+
+## Allows for changes to be made to the values of self.crit_rate(char1, weap1) and self.crit_avoid(char2).
+signal before_calc_crit_accuracy(event:CalcCritAccuracy)
 ## Critical Accuracy (char1) = Critical Rate (char1) - Critical Avoid (char2)
 func crit_accuracy(char1:Character, weap1:Weapon, char2:Character) -> int:
-	return int(self.crit_rate(char1, weap1) - self.crit_avoid(char2))
+	var c_acc_event = CalcCritAccuracy.new(self.crit_rate(char1, weap1), self.crit_avoid(char2))
+	before_calc_crit_accuracy.emit(c_acc_event)
+	
+	return c_acc_event.crit_rate - c_acc_event.crit_avoid
