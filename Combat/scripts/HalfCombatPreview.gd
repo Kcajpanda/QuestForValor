@@ -67,8 +67,8 @@ func _calc_core_stat() -> void:
 
 ##
 func _on_before_calc_damage(event:CalcDamage) -> void:
-	attack_power = event.attack_power.alter_val
-	defense_power = event.defense_power.alter_val
+	attack_power = event.attack_power
+	defense_power = event.defense_power
 
 ##
 func _on_before_calc_defense_power(event:CalcDefensePower) -> void:
