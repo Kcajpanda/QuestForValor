@@ -62,19 +62,25 @@ func _roll_die() -> int:
 	return rng.randi_range(1,100)
 
 ##
+signal after_roll(event)
+##
 func roll() -> State:
-	var rolled := self._roll_die()
-	if rolled > hit:
+	var roll_event = AttackContext.new(self._roll_die(), hit, dge, crit)
+	after_roll.emit(roll_event)
+	
+	#TODO fix the way you handle hp, chnage it to damage calc and create a signal for affecting it.
+	
+	if roll_event.rolled > roll_event.hit:
 		result = State.MISS
 		post_hp = pre_hp
-	elif rolled <= hit and rolled > dge:
+	elif roll_event.rolled <= roll_event.hit and roll_event.rolled > roll_event.dge:
 		result = State.DODGE
 		post_hp = pre_hp
-	elif rolled <= dge and rolled > crit:
+	elif roll_event.rolled <= roll_event.dge and roll_event.rolled > roll_event.crit:
 		result = State.HIT
 		post_hp = pre_hp - dmg
 		self.weap1.age()
-	elif rolled <= crit:
+	elif roll_event.rolled <= roll_event.crit:
 		result = State.CRIT
 		post_hp = pre_hp - (dmg*3)
 		self.weap1.age()

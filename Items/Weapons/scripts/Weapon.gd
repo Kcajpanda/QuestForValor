@@ -102,7 +102,6 @@ func _init(weap_name:String, id:int, type:int, mght:int=0, acc:int=0, uses:int=0
 	self.wght = SaveStat.new("wght", wght)
 	self.crit = SaveStat.new("crit", crit)
 	
-	mods = ModList.new()
 	self.effects = effects
 	holder =  null
 

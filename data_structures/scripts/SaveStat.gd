@@ -7,10 +7,6 @@ class_name SaveStat
 var temp:
 	get:
 		return temp
-### List of modifers currently affecting the temp stat. Starts as empty
-#var mods: Array[Modifier]:
-	#get:
-		#return mods
 
 ## Extends all function of stat but stores a temp val that is intended to be mutated but can be reset to the oringnal val with reset(). it also has a list of modifiers currently modifying that temp val.
 func _init(name:String="def_save_stat_name", value=null):
