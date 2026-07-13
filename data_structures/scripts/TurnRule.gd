@@ -1,5 +1,5 @@
 ##
-extends Resource
+extends Rule
 
 class_name TurnRule
 
@@ -17,6 +17,10 @@ var rel_apply_on_turns:Array[int]
 var abs_apply_on_turns:Array[int]
 ## Human readbale version of the rule.
 var str_freq:String
+## Represent current turn in-game.
+var curr_turn:int
+## Represents the in-game turn when the rule started.
+var start_turn
 ## Signal indicating its tiem for the mod to be deleted
 signal end_duration
 
@@ -28,14 +32,26 @@ func _init(first_apply:int, times_applied:int, applied_every:int, duration:int) 
 	self.duration = duration
 	self._gen_rel_apply_turns()
 	self._det_freq()
+	self.connect("start_turn", )
 
 ##
-func is_duration_finished(start_turn:int, curr_turn:int) -> void:
+func set_start_turn(start_turn:int) -> void:
+	self.start_turn = start_turn
+
+##
+func _turn_increm(turn_num:int) -> void:
+	self.curr_turn = turn_num
+
+## Connect
+
+# duration and when to apply are seperate, they shouldn't live in the same object.
+
+func _is_duration_finished() -> void:
 	if curr_turn == start_turn + duration:
 		end_duration.emit(curr_turn)
 
 ##
-func is_apply_turn(start_turn:int, curr_turn:int) -> bool:
+func is_apply_time() -> bool:
 	for rel_apply_turn_num in rel_apply_on_turns:
 		if curr_turn == rel_apply_turn_num + start_turn:
 			return true

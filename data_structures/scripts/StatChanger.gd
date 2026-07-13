@@ -7,21 +7,21 @@ class_name StatChanger
 var prop_operation:PropOperation
 ## Rules to determine when the PropOperation should .apply(). 
 var rules:TurnRule
+##
+var act_trigger:Trigger
+##
+signal death_signal
 
 ## 
-func _init(name:String, id:int, prop_name:StringName, operation:StringName, val, first_apply:int, times_applied:int, applied_every:int, duration:int, descr:String=""):
+func _init(name:String, id:int, prop_name:StringName, operation:StringName, val, act_signal:Signal, descr:String=""):
 	self.prop_operation = PropOperation.new(prop_name, operation, val)
-	self.rules = TurnRule.new(first_apply, times_applied, applied_every, duration)
+	self.act_trigger = Trigger.new(act_signal, apply)
 	
 	super(name, id, self._descr_maker(descr))
 
 ## Returns .apply() of .prop_operation.
 func apply(prop_val):
 	return prop_operation.apply(prop_val)
-
-## Returns rules.is_apply_turn
-func is_turn_to_apply(start_turn:int, curr_tunr:int) -> bool:
-	return rules.is_apply_turn(start_turn, curr_tunr)
 
 # Constructor Methods
 
