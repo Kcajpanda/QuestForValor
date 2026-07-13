@@ -7,21 +7,25 @@ class_name StatChanger
 var prop_operation:PropOperation
 ## Rules to determine when the PropOperation should .apply(). 
 var rules:TurnRule
-##
+## Trigger to execute apply. Trigger for when to act.
 var act_trigger:Trigger
-##
-signal death_signal
+## Trigger to execute _death and emit signal for own death.
+var death_condition:DeathCondition
+
+#TODO make a more consistent way to control death, include the signal and age, etc.
+
 
 ## 
-func _init(name:String, id:int, prop_name:StringName, operation:StringName, val, act_signal:Signal, descr:String=""):
-	self.prop_operation = PropOperation.new(prop_name, operation, val)
-	self.act_trigger = Trigger.new(act_signal, apply)
+func _init(name:String, id:int, prop_name:StringName, operation:StringName, val, mutate_or_apply:bool, act_condition:Condition, death_condition:DeathCondition, descr:String=""):
+	self.prop_operation = PropOperation.new(prop_name, operation, val, mutate_or_apply)
+	act_trigger = Trigger.new(act_condition, operate)
+	self.death_trigger = death_condition
 	
 	super(name, id, self._descr_maker(descr))
 
-## Returns .apply() of .prop_operation.
-func apply(prop_val):
-	return prop_operation.apply(prop_val)
+## Returns .operate() of .prop_operation.
+func operate(prop_val):
+	return prop_operation.operate(prop_val)
 
 # Constructor Methods
 
