@@ -3,23 +3,35 @@ extends Resource
 
 class_name TurnManager
 
+## The various phases of the turn.
+enum state { PLAYER, ENEMY, NEUTRAL }
 
-## Stores Current Turn Number.
-var curr_turn:int
+
+## Stores the current phase.
+var phase:state
+## Stores current turn number.
+var turn_num:int
 
 
 ## Ultimate Source of truth and controller for turn numbers. Signals current turn.
 func _init() -> void:
-    self.curr_turn = 0
+    self.turn_num = 0
+    phase = state.PLAYER
 
-## Advances to the next turn and emits the current turn number through turn_start().
-func next_turn() -> void:
-    curr_turn +=1
-    EventBus.turn_start.emit(curr_turn)
-
-
-
-
+## Based on phase logic it advances the phase and or turn and signals it.
+func next() -> void:
+    match phase:
+        state.PLAYER:
+            phase = state.ENEMY
+            TurnBus.phase_start.emit(PhaseStart.new(turn_num, phase))
+        state.ENEMY:
+            phase = state.NEUTRAL
+            TurnBus.phase_start.emit(PhaseStart.new(turn_num, phase))
+        state.NEUTRAL:
+            phase = state.PLAYER
+            turn_num +=1
+            TurnBus.turn_start.emit(TurnStart.new(turn_num, phase))
+            TurnBus.phase_start.emit(PhaseStart.new(turn_num, phase))
 
 """
 

@@ -1,4 +1,4 @@
-## Parent class of all events used in combat for calculations, no instance shoudl exist.
+## Parent class of all events used in combat for calculations, no instance should exist.
 extends Event
 
 class_name CombatCalcEvent

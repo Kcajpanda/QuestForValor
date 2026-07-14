@@ -5,8 +5,6 @@ class_name StatChanger
 
 ## PropOperation used to change the stat.
 var prop_operation:PropOperation
-## Rules to determine when the PropOperation should .apply(). 
-var rules:TurnRule
 ## Trigger to execute apply. Trigger for when to act.
 var act_trigger:Trigger
 ## Trigger to execute _death and emit signal for own death.
@@ -31,4 +29,4 @@ func operate(prop_val):
 
 ## Used by constructor to write the explanation part of the descr.
 func _descr_maker(descr:String="") -> String:
-	return descr + prop_operation.str_operation + str(prop_operation.val) + " to " + prop_operation.prop_name + rules.str_freq
+	return descr + prop_operation.str_operation + str(prop_operation.val) + " to " + prop_operation.prop_name
