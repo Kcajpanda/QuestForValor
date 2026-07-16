@@ -5,7 +5,7 @@ class_name Modifier
 
 ## Stores the creation param for a modifier of a given name key=modifier_name, to be replaced by Resource later
 const MODIFIERS = { # prop_name:StringName, operation:StringName, val=null, act_condition:Condition, death_condition:DeathCondition, descr:String=""
-	"Str-boost-I" : ["strn", "add", 2, Condition.new(), Condition.new(), "A small Strength boost,"] # fix to ahve actual conditions or make contructor make them.
+	"Str-boost-I" : ["strn", "add", 2, "A small Strength boost,"] # fix to ahve actual conditions or make contructor make them.
 }
 
 ##

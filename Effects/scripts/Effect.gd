@@ -14,4 +14,4 @@ const EFFECTS = { # prop_name:StringName, operation:StringName, val=null, first_
 ##
 func _init(name:StringName, id) -> void:
 	var params:Array = EFFECTS.get(name) #TODO change to resource file interpretation.
-	super(name, id, params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7])
+	super(name, id, params[0], params[1], params[2], true, params[3], params[4], params[5])

@@ -32,12 +32,3 @@ func next() -> void:
             turn_num +=1
             TurnBus.turn_start.emit(TurnStart.new(turn_num, phase))
             TurnBus.phase_start.emit(PhaseStart.new(turn_num, phase))
-
-"""
-
-Event Bus (own signal)  {concept} System tracks every => emit signl with relevenat data => object that was given EventBus.specific_signal_name recices it asn acts
-
-You need to build system that track everything, thy user / you needs to write the custom event classes that listen fpr those combinations, emit again that other thinsg listen to.
-
-
-"""

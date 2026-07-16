@@ -1,5 +1,5 @@
 ## Event for when an Attack obj is created. Takes in the 
-extends Event
+extends InviteEvent
 
 class_name AttackContext
 
