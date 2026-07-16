@@ -3,6 +3,7 @@ extends Resource
 
 class_name Condition
 
+
 ## Whether the con has been met.
 var is_met:bool
 ## Optional signal that can be used depending on how the subclass chooses bool or signals for its way of detecting wether the condition has been met.
