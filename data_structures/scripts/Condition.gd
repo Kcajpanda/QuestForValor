@@ -23,7 +23,7 @@ func is_con_met() -> bool:
     return is_met 
 
 ## Function evaluate to see whether the condition has been met, check_condition() handles the state of .is_met while .evaluate() handles the actual logic of whether the condition has been met.
-func check_condition() -> bool: 
+func check_condition(_event:Event=null) -> bool: 
     var result = self.evaluate()
     if result != is_met:
         is_met = result
@@ -32,7 +32,7 @@ func check_condition() -> bool:
     return is_met
 
 ## Does the actual evaluation for whether the condition has been met by evaluating the provided _params. Built to work with bools and signals so wether evaluation is signal triggered or manually triggered and whether the result should, be a bool or a fired signal its handled automatically. Alteration os .is_met state is handles by .check_condition(). Actual logic of this func is implemented by child classes.
-func evaluate() -> bool:
+func evaluate(_event:Event=null) -> bool:
     push_warning("Condition.evaluate() not overridden.")
     return false
 
