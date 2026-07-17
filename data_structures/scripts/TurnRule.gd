@@ -1,4 +1,4 @@
-## A declarative instance that stores complex turn rules in an easy way to interact with. It takes in essential values for determining the rules, saves them, then generates an array of the turn numbers where the action should execute.
+## A declarative instance that stores complex turn rules in an easy way to interact with. It takes in essential values for determining the rules, saves them, then generates an array of the turn numbers where the action should execute. When .create_active() is run it constructs and returns an ActiveTurnRule.
 extends Rule
 
 class_name TurnRule
@@ -18,7 +18,8 @@ var abs_apply_on_turns:Array[int]
 ## Human readable version of the rule.
 var str_freq:String
 
-## A declarative instance that stores complex turn rules in an easy way to interact with. It takes in essential values for determining the rules, saves them, then generates an array of the turn numbers where the action should execute.
+
+## A declarative instance that stores complex turn rules in an easy way to interact with. It takes in essential values for determining the rules, saves them, then generates an array of the turn numbers where the action should execute. When .create_active() is run it constructs and returns an ActiveTurnRule.
 func _init(first_apply:int, times_applied:int, applied_every:int, duration:int) -> void:
 	self.first_apply = first_apply
 	self.times_applied = times_applied
@@ -27,30 +28,10 @@ func _init(first_apply:int, times_applied:int, applied_every:int, duration:int) 
 	self._gen_rel_apply_turns()
 	self._det_freq()
 
-## Based on the turn the rule started to apply start_turn and the curr_turn, it returns whether the rule has reached the end of its duration.
-func _is_duration_finished(start_turn:int, curr_turn:int) -> bool:
-	if curr_turn == start_turn + duration:
-		return true
-	return false
+## Starts the application of the rule. Turns instance from a state container into something you can get real checks from to determine when the rule ends.
+func create_active(start_turn:int) -> ActiveTurnRule:
+	return ActiveTurnRule.new(start_turn, duration, rel_apply_on_turns)
 
-## Based on the turn the rule started to apply start_turn and the curr_turn, it returns whether its a turn that meets the rule. 
-func is_apply_time(start_turn:int, curr_turn:int) -> bool:
-	for rel_apply_turn_num in rel_apply_on_turns:
-		if curr_turn == rel_apply_turn_num + start_turn:
-			return true
-	return false
-
-## Based on the (relative) turn the rule started to apply start_turn and the (relative) curr_turn, it returns whether its a turn that meets the rule.
-func is_apply_rel_turn(rel_curr_turn:int) -> bool:
-	return rel_curr_turn in self.rel_apply_on_turns
-
-## Intended to generate turn numbers when action should execute based on the in-game turn system, not generate at construction of object. 
-func gen_abs_apply_turns(start_turn:int) -> void:
-	self.start_turn = start_turn
-	self.end_turn = start_turn + duration
-	abs_apply_on_turns = []
-	for turn_num in self.rel_apply_on_turns:
-		abs_apply_on_turns.append(turn_num + start_turn)
 
 # Constructor Methods
 

@@ -15,7 +15,7 @@ func _init(conditions:Array[Condition], name_signal:Signal=Signal()) -> void:
         self.connect_to_check_condition(con.signal_is_met_changed)
 
 ## Override of parent eval to handle evaluating for this instances multiple conditions.
-func evaluate() -> bool:
+func evaluate(_event:Event=null) -> bool:
     for con in conditions:
         if !con.is_con_met():
             return false
