@@ -3,7 +3,7 @@ extends Resource
 
 class_name Attack
 ##
-enum State {NONE=0, MISS=1, DODGE=2, HIT=3, CRIT=4}
+enum state {NONE=0, MISS=1, DODGE=2, HIT=3, CRIT=4}
 ##
 var rng
 
@@ -32,13 +32,9 @@ var pre_hp:int
 ##
 var post_hp:int
 ##
-var result:State:
-	get:
-		return result
+var result:state
 ##
-var data:Array:
-	get:
-		return data
+var data:Array
 
 ##
 func _init(char1:Character, weap1:Weapon, char2:Character, weap2:Weapon, tile2:Tile, stats:Array[int]):
@@ -61,30 +57,32 @@ func _init(char1:Character, weap1:Weapon, char2:Character, weap2:Weapon, tile2:T
 func _roll_die() -> int:
 	return rng.randi_range(1,100)
 
+
 ##
-signal after_roll(event)
-##
-func roll() -> State:
+func roll() -> state:
 	var roll_event = AttackContext.new(self._roll_die(), hit, dge, crit)
-	after_roll.emit(roll_event)
+
+	CombatBus.after_roll.emit(roll_event)
 	
 	#TODO fix the way you handle hp, chnage it to damage calc and create a signal for affecting it.
 	
 	if roll_event.rolled > roll_event.hit:
-		result = State.MISS
+		result = state.MISS
 		post_hp = pre_hp
 	elif roll_event.rolled <= roll_event.hit and roll_event.rolled > roll_event.dge:
-		result = State.DODGE
+		result = state.DODGE
 		post_hp = pre_hp
 	elif roll_event.rolled <= roll_event.dge and roll_event.rolled > roll_event.crit:
-		result = State.HIT
+		result = state.HIT
 		post_hp = pre_hp - dmg
 		self.weap1.age()
 	elif roll_event.rolled <= roll_event.crit:
-		result = State.CRIT
+		result = state.CRIT
 		post_hp = pre_hp - (dmg*3)
 		self.weap1.age()
 	else:
-		result = State.MISS
+		result = state.MISS
+	var attack_res = AttackResult.new(pre_hp, post_hp, result)
+	CombatBus.attack_result.emit(attack_res)
 	data += [post_hp, result]
 	return result

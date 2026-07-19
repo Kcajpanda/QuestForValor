@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 
 CombatBus="*uid://ss0d0klq4s38"
 TurnBus="*uid://0gcks64gvyci"
+UsesBus="*uid://chsa02mel1w4c"
 
 [physics]
 

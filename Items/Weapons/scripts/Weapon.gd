@@ -1,9 +1,7 @@
-## Exntension of the Item class containign methods and properties relevant to weapons.
+## Extension of the Item class containing methods and properties relevant to weapons.
 class_name Weapon
 
-extends AgeEntity
-
-##
+extends Item
 
 ## Takes in self.rq_rnk and returns the str_rq_rnk, used for generating str_rq_rnk
 const WEAPON_RANK = {
@@ -28,7 +26,7 @@ const WEAPON_TYPE = {
 }
 
 enum advantage {ADV, NUETRAL, DISADV}
-## Matrix that takes in row=weap1, and col=weap2 => advantage for weap1
+## Matrix that takes in row=weap1, and col=weap2 => advantage for weap1.
 const TRI_BONUS = [
 	[ 0, 1, -1, 0, 0, 0], #Sword
 	[ -1, 0, 1, 0, 0, 0], #Axe
@@ -38,7 +36,7 @@ const TRI_BONUS = [
 	[ 0, 0, 0, 1, -1, 0] #Eldritch
 ]
 
-## Dictioanry used to determine bonus to acc and dmg for those at advatage and disadvantage in the weapon-tri, nuetral get no adv or dis regardless of weap rnk. 
+## Dictionary used to determine bonus to acc and dmg for those at advantage and disadvantage in the weapon-tri, neutral get no adv or dis regardless of weap rnk. 
 const RANK_ADVANTAGES = { ## [ [adv_acc, adv_dmg], [dis_acc, dis_dmg] ]
 	0: [ [5, 0], [-5, 0] ],
 	1: [ [5, 0], [-5, 0] ],
@@ -49,7 +47,7 @@ const RANK_ADVANTAGES = { ## [ [adv_acc, adv_dmg], [dis_acc, dis_dmg] ]
 	6: [ [15, 2], [-15, -2] ],
 }
 
-## takes in self.id and returns its dmage type Physical/Magic true/false
+## Takes in self.id and returns its damage type Physical/Magic true/false
 const DMG_TYPE = {
 	0: true, #Sword
 	1: true, #Axe
@@ -59,10 +57,10 @@ const DMG_TYPE = {
 	5: false, #Eldritch
 }
 
-# Unmutables
-## Required Rank, represent the needed skill rank needed to weild a given weapon.
+# Immutables
+## Required Rank, represent the needed skill rank needed to wield a given weapon.
 var rq_rnk : int
-## (String) Required Rank, represent the needed skill rank needed to weild a given weapon. Determined by const WEAPON_RANK.
+## (String) Required Rank, represent the needed skill rank needed to wield a given weapon. Determined by const WEAPON_RANK.
 var str_rq_rnk : String
 ## The type of damage a weapon deals Physical/Magic true/false
 var dmg_type: bool
@@ -74,9 +72,9 @@ var atck_range: int
 var mght: SaveStat
 ## Accuracy, used to calculate hitrate when attacking with this weapon.
 var acc: SaveStat
-## Weight, used to determine how much strength is needed to wield the weapon or conversly, how much it will slow you down.
+## Weight, used to determine how much strength is needed to wield the weapon or conversely, how much it will slow you down.
 var wght: SaveStat
-## Critical Chance, Used to determine the likelyhood of a critical hit.
+## Critical Chance, Used to determine the likelihood of a critical hit.
 var crit: SaveStat
 
 # Other

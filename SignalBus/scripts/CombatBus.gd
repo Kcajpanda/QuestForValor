@@ -64,10 +64,9 @@ signal before_calc_crit_avoid(event:CalcCritAvoid)
 ## Allows for changes to be made to the values of self.crit_rate(char1, weap1) and self.crit_avoid(char2).
 signal before_calc_crit_accuracy(event:CalcCritAccuracy)
 
+# In Combat
 
-# Turn Manager
-
-## Signal for when the turn starts.
-signal turn_start(turn_num:int)
-## Signal for when the turn ends.
-signal turn_end(turn_num:int)
+##
+signal after_roll(event:AttackContext)
+## Attack has been rolled and its state determined.
+signal attack_result(event)

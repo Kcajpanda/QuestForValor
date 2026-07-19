@@ -14,7 +14,7 @@ var death_condition:DeathCondition
 
 
 ## 
-func _init(name:String, id:int, prop_name:StringName, operation:StringName, val, mutate_or_apply:bool, act_condition:Condition, death_condition:DeathCondition, descr:String=""):
+func _init(name:String, id:int, prop_name:StringName, operation:StringName, val, mutate_or_apply:bool, uses:int, act_condition:Condition, death_condition:DeathCondition, descr:String=""):
 	self.prop_operation = PropOperation.new(prop_name, operation, val, mutate_or_apply)
 	act_trigger = Trigger.new(act_condition, operate)
 	self.death_trigger = death_condition
