@@ -6,7 +6,7 @@ class_name EntityDict
 ## Name of prop it affects, used by ModManager
 var prop_name: StringName
 ## list of Dictionary of modifiers sorted by id (allows for duplicates of modifier with easy distiction between them regardless of the removal of other entries.)
-var dict: Dictionary[int, Object]
+var dict: Dictionary
 ## Based on turn(), mods that are currently being applied.
 var curr_mods:Array[Object]
 ## start id number
